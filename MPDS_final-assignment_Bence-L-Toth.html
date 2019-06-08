@@ -230,8 +230,8 @@ drinks[, (columns_to_convert) := lapply(.SD, as.numeric), .SDcols = columns_to_c
   mutate_all(~na_if(., '?'))</code></pre>
 <p>We need a way to aggregate the servings in a meaningful way: French people might consume more wine, while Germans might drink more beer, according to well-known stereotypes. Nevertheless, we need a way to compare these countries on a similar scale.</p>
 <p>I wrote a function that calculates the total litres of pure alcohol for each country, using the following formula:</p>
-<p><span class="math inline">\(total\_litres\_of\_pure\_alcohol = beer\_servings ∗ (12 ∗ 0.0295 ∗ 0.05) + wine\_servings ∗ (5 ∗ 0.029 5 ∗ 0.1 ) + spirit\_servings ∗ (1.5 ∗ 0.0295 ∗ 0.4)\)</span></p>
-<pre class="r"><code>ounce_to_liter &lt;- function(df) {
+<p><span class="math inline">\(total\_litres\_of\_pure\_alcohol = beer\_servings â (12 â 0.0295 â 0.05) + wine\_servings â (5 â 0.029 5 â 0.1 ) + spirit\_servings â (1.5 â 0.0295 â 0.4)\)</span></p>
+<pre class="r"><code>calc_consuption &lt;- function(df) {
   ### Converts servings into ounces, ounces to litres, ###
   ### calculates pure alcohol content and returns total pure alcohol per country ###
   beer_serving_ounce &lt;- df$beer_servings * 12
@@ -247,11 +247,9 @@ drinks[, (columns_to_convert) := lapply(.SD, as.numeric), .SDcols = columns_to_c
   spirit_alcohol &lt;- 0.4 * spirit_serving_litre
   
   total_pure_alcohol &lt;- beer_alcohol + wine_alcohol + spirit_alcohol
-  
 }
 
-total_pure_alcohol &lt;- ounce_to_liter(drinks)
-
+total_pure_alcohol &lt;- calc_consuption(drinks)
 drinks[, total_litres_of_pure_alcohol := total_pure_alcohol]</code></pre>
 <p>We end up with the following table:</p>
 <pre class="r"><code>head(drinks, 5) %&gt;% 
@@ -372,7 +370,7 @@ Angola
 </div>
 <div id="expectations-in-life" class="section level2">
 <h2>Expectations in life</h2>
-<p>The <code>life_exp</code> data has various measures on health (life expectancy at birth, at age 60 and healthy life expectancy), showing data genderwise and combined, spanning from 1990 to 2013.</p>
+<p>The <code>life_exp</code> data has various measures on health (life expectancy at birth, at age 60 and healthy life expectancy), showing data gender-wise and combined, spanning from 1990 to 2013.</p>
 <p>I focus on life expectancy at birth for both sexes in 2012 and joined the <code>drinks</code> data by country.</p>
 <pre class="r"><code>life_exp &lt;- life_exp %&gt;% 
   filter(GhoDisplay == 'Life expectancy at birth (years)',
@@ -403,7 +401,7 @@ data &lt;- inner_join(drinks, life_exp, by = 'country')</code></pre>
 </div>
 <div id="we-are-the-world" class="section level1">
 <h1>We are the world</h1>
-<p>The <code>countries</code> data is a bit messier than the other two. It is stored as a <em>.xlsx</em> file. We skipped the first 3 nonimporant lines on sheet 1 during import. The (now) first line contains the headers, and some part of it is left in the second line as well.</p>
+<p>The <code>countries</code> data is a bit messier than the other two. It is stored as a <em>.xlsx</em> file. We skipped the first 3 nonimportant lines on sheet 1 during import. The (now) first line contains the headers, and some part of it is left in the second line as well.</p>
 <pre class="r"><code>head(countries[, 1:7]) %&gt;% 
   kable(caption = 'Table 2: Countries dataset') %&gt;%
   kable_styling('striped', full_width = F, position = 'center') %&gt;%
