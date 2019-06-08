@@ -1,4 +1,4 @@
-.# ceu_life-expectancy
+# ceu_life-expectancy
 Finding relationship between life expectancy, alcohol consumption and geographical/socio-economic data.
 
 Done as a requisite of the Mastering the Process of Data Science course at Central European University in Hungary. 
