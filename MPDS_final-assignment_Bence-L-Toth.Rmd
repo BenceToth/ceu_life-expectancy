@@ -29,9 +29,9 @@ This small analysis uncovers this topic with the help of **R** and simple regres
 
 # Dionysus' dilemma
 
-There are numerous studies done on the health effects of alcohol and how it can change the life span of people. Just by typing *"alcohol life expectancy study"* into Google, we end up with around 11,000,000 results. Some may clain that [moderate drinking can actually be beneficial to our health](https://www.acc.org/latest-in-cardiology/articles/2017/08/14/12/54/consuming-alcohol-in-moderation-can-lower-mortality-risks), while most studies suggest that [Even one drink a day linked to lower life expectancy](https://www.reuters.com/article/us-health-alcohol/even-one-drink-a-day-linked-to-lower-life-expectancy-idUSKBN1I42H6).
+There are numerous studies done on the health effects of alcohol and how it can change the life span of people. Just by typing *"alcohol life expectancy study"* into Google, we end up with around 11,000,000 results. Some may claim that [moderate drinking can actually be beneficial to our health](https://www.acc.org/latest-in-cardiology/articles/2017/08/14/12/54/consuming-alcohol-in-moderation-can-lower-mortality-risks), while most studies suggest that [Even one drink a day linked to lower life expectancy](https://www.reuters.com/article/us-health-alcohol/even-one-drink-a-day-linked-to-lower-life-expectancy-idUSKBN1I42H6).
 
-This analysis examines the pattern of association between alcohol consumption and average life expectancy of various countries, explaining the possible correlations and offer an insight on why these correlations might be present.
+This analysis examines the pattern of association between alcohol consumption and average life expectancy of various countries, explaining the possible correlations and offer insight into why these correlations might be present.
 
 My initial hypothesis is that countries with higher life expectancy also consume more alcohol. This might sound controversial at first, but it is probably due to other factors like higher quality of life, and only the byproduct of it is access to alcoholic beverages.
 
@@ -59,7 +59,7 @@ custom_theme <- theme_tufte() +
 
 3 datasets were used for this task:
 
-* *Drinks.csv*: number of alcohol servings per capita per year for 15 years of age or older (for beer, wine and spirit) across various countries
+* *Drinks.csv*: number of alcohol servings per capita per year for 15 years of age or older (for beer, wine, and spirit) across various countries
 
 * *LifeExpectancy.csv*: life expectancy and other health factors across various countries
 
@@ -92,7 +92,7 @@ drinks %>%
   mutate_all(~na_if(., '?'))
 ```
 
-We need a way to aggregate the servings in a meaningful way: french people might consume more wine, while germans might drink more beer, accoring to well-known stereotypes. Nevertheless, we need a way to compare these countries on a similar scale.
+We need a way to aggregate the servings in a meaningful way: French people might consume more wine, while Germans might drink more beer, according to well-known stereotypes. Nevertheless, we need a way to compare these countries on a similar scale.
 
 I wrote a function that calculates the total litres of pure alcohol for each country, using the following formula:
 
@@ -136,7 +136,7 @@ head(drinks, 5) %>%
 
 The `life_exp` data has various measures on health (life expectancy at birth, at age 60 and healthy life expectancy), showing data genderwise and combined, spanning from `r range(life_exp$YearCode)[1]` to `r range(life_exp$YearCode)[2]`.
 
-I focues on life expectancy at birth for both sexes in 2012 and joined the `drinks` data by country.
+I focus on life expectancy at birth for both sexes in 2012 and joined the `drinks` data by country.
 
 ```{r prepare_lifeexp_1}
 life_exp <- life_exp %>% 
@@ -162,7 +162,7 @@ This signals a moderately high correlation, suggesting that countries with highe
 
 # We are the world
 
-The `countries` data is a bit messier than the other two. It is stored as an *.xlsx* file. We skipped the first 3 non-imporant lines on sheet 1 during import. The (now) first line contains the headers, and some part of it is left in the second line as well.
+The `countries` data is a bit messier than the other two. It is stored as a *.xlsx* file. We skipped the first 3 nonimporant lines on sheet 1 during import. The (now) first line contains the headers, and some part of it is left in the second line as well.
 
 ```{r prepare_countries_1}
 head(countries[, 1:7]) %>% 
@@ -230,7 +230,7 @@ corrs %>%
   custom_theme
 ```
 
-The number of phones, literacy and GDP per capital is also very highly correlated with people living longer. This leads to my assumption in the beginning: better educated, richer, technology-equipped countries have a higher life expectancy. These circumstances provide availablility to alcoholic beverages for citizens, and they consume more of them than poorer countries without that level of access. 
+The number of phones, literacy, and GDP per capita is also very highly correlated with people living longer. This leads to my assumption in the beginning: better educated, richer, technology-equipped countries have a higher life expectancy. These circumstances provide the availability to alcoholic beverages for citizens, and they consume more of them than poorer countries without that level of access. 
 
 We can see the correlations by each region to prove that claim:
 
@@ -243,7 +243,7 @@ ggplot(data = data, aes(x = life_expectancy, y = total_litres_of_pure_alcohol, c
   custom_theme
 ```
 
-The hypotheses seems to be right indeed. More developed regions such as *Europe*, the *Americas* and the *Western Pacific* (Australia, New Zealand etc.) seem to have a positive relationship according to the `loess` regression. On the other hand, less developed regions like *Africa* and *Eastern Mediterranean* tend to consume less alcohol due to economical/cultural/religious reasons, and their life expectancy is not affected by the magnitude of drink intake.
+The hypothesis seems to be right indeed. More developed regions such as *Europe*, the *Americas* and the *Western Pacific* (Australia, New Zealand, etc.) seem to have a positive relationship according to the `loess` regression. On the other hand, less developed regions like *Africa* and *Eastern Mediterranean* tend to consume less alcohol due to economic/cultural/religious reasons, and their life expectancy is not affected by the magnitude of drink intake.
 
 If we look at the log GDP per capita regressed on life expectancy, it shows the clearest picture:
 
@@ -258,7 +258,7 @@ ggplot(data = data, aes(x = life_expectancy, y = log(gdp_per_capita), color = re
 
 We could see at first how alcohol consumption is correlated with life expectancy, and why it is dangerous to immediately jump to conclusions. After further inspections, we discovered that it is developed countries which have the highest life expectancy and they also tend to consume more alcohol, but one does not necessarily imply the other. This is why it is very dangerous in implying causation from correlation!
 
-```{r img}
+```{r img, echo = FALSE}
 pp <- readPNG("xkcd.png")
 plot.new()
 rasterImage(pp,0,0,1,1)
